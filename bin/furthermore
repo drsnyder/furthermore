@@ -1,0 +1,30 @@
+import textile
+import re
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import get_lexer_by_name, TextLexer
+from mako.template import Template
+
+
+def replace_code(m):
+    try: 
+        lexer = get_lexer_by_name(m.group(1))
+    except ValueError:
+        lexer = TextLexer()
+
+    code = highlight(m.group(2), lexer, HtmlFormatter(noclasses=False))
+    code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
+    return '\n<notextile><div class="code">%s</div></notextile>\n' % code
+
+
+
+if __name__ == '__main__':
+    fd = open('textile-pygments.test', 'r')
+    data = fd.read()
+
+    
+    pattern = re.compile(r'{% highlight (.+?) %}(.+?){% endhighlight %}', re.S)
+    data = pattern.sub(replace_code, data)
+    mytemplate = Template(filename='post.html')
+    print mytemplate.render(content=textile.textile(data))
+

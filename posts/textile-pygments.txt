@@ -1,0 +1,13 @@
+Some text
+
+{% highlight ruby %}
+def foo
+  puts 'foo'
+end
+{% endhighlight %}
+
+{% highlight python %}
+def somefun():
+    print 'foo'
+    print 'bar'
+{% endhighlight %}
