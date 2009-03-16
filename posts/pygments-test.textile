@@ -1,3 +1,7 @@
+---
+layout: post
+title: A post with pygments
+...
 Some text
 
 {% highlight ruby %}
