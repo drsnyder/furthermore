@@ -22,9 +22,15 @@ class TestQueueMon(unittest.TestCase):
     def testparse_post(self):
         """ split post into yaml header and post rest """
         (header, content) = furthermore.parse_post(furthermore.get_posts().pop())
-        header_config = yaml.load(header)
-        self.assertTrue(header_config.has_key('layout'))
-        self.assertTrue(header_config.has_key('title'))
+        self.assertTrue(header.has_key('layout'))
+        self.assertTrue(header.has_key('title'))
+
+    def testrender_post(self):
+        test = furthermore.render_post(furthermore.get_posts().pop())
+        self.assertTrue(len(test) > 0)
+        self.assertTrue(re.search("A post with", test))
+        self.assertTrue(re.search("codehilite", test))
+        
 
         
 

@@ -1,27 +1,16 @@
 import os
 import sys
 import re
-import textile
+import markdown
+import yaml
 from collections import defaultdict
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_by_name, TextLexer
 from mako.template import Template
-from optparse import OptionParser
+
+
+# html = markdown.markdown(text, ['codehilite(force_linenos=True)'])
 
 POST_DIR = "posts"
-VALID_POST_FILE = ".*\.textile$"
-CODE_PATTERN = re.compile(r'{% highlight (.+?) %}(.+?){% endhighlight %}', re.S)
-
-def replace_code(m):
-    try: 
-        lexer = get_lexer_by_name(m.group(1))
-    except ValueError:
-        lexer = TextLexer()
-
-    code = highlight(m.group(2), lexer, HtmlFormatter(noclasses=False))
-    code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
-    return '\n<notextile><div class="code">%s</div></notextile>\n' % code
+VALID_POST_FILE = ".*\.markdown$"
 
 
 def get_posts(dir="%s/.." % os.path.dirname(__file__)):
@@ -33,7 +22,10 @@ def get_posts(dir="%s/.." % os.path.dirname(__file__)):
 
 def parse_post(post, dir="%s/.." % os.path.dirname(__file__)):
     data = open("%s/%s/%s" % (dir, POST_DIR, post), "r").read()
-    return tuple(re.match(r"(.*)\.\.\.(.*)", data, re.MULTILINE|re.DOTALL).group(1,2))
+    matches = re.match(r"(.*)\.\.\.(.*)", data, re.MULTILINE|re.DOTALL)
+    post = matches.group(2)
+    header = yaml.load(matches.group(1))
+    return (header, post)
 
 def write_post(data, outdir=None, dir="%s/.." % os.path.dirname(__file__)):
     if outdir == None:
@@ -44,17 +36,17 @@ def write_post(data, outdir=None, dir="%s/.." % os.path.dirname(__file__)):
 
     return
 
+def get_template(dir, template):
+    return Template(filename="%s/%s.html" % (dir, template))
 
-def render_post(post, properties=defaultdict(str)):     
+def render_post(post, properties=defaultdict(str), \
+        template_dir="%s/../templates" % os.path.dirname(__file__)):
     # seems like we need some kind of post object
     (header, content) = parse_post(post)
-    for (k, v) in header.iteritems():
-        properties[k] = v
+    if not header['layout']:
+        header['layout'] = "post"
 
-    data = CODE_PATTERN.sub(replace_code, content)
-    mytemplate = Template(filename='post.html')
-    properties['content'] = textile.textile(content)
-    return mytemplate.render(properties)
-
-    
+    template = get_template(template_dir, header['layout'])
+    content = markdown.markdown(content, ['codehilite(force_linenos=True)'])
+    return template.render(content=content, title=header['title'])
 
