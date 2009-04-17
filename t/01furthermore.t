@@ -31,7 +31,6 @@ class TestQueueMon(unittest.TestCase):
         self.assertTrue(re.search("A post with", test))
         self.assertTrue(re.search("codehilite", test))
         
-
         
 
 if __name__ == '__main__':

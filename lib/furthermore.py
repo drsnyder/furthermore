@@ -3,6 +3,7 @@ import sys
 import re
 import markdown
 import yaml
+import yaml
 from collections import defaultdict
 from mako.template import Template
 
@@ -27,14 +28,14 @@ def parse_post(post, dir="%s/.." % os.path.dirname(__file__)):
     header = yaml.load(matches.group(1))
     return (header, post)
 
-def write_post(data, outdir=None, dir="%s/.." % os.path.dirname(__file__)):
+
+def write_post(post, outdir=None, dir="%s/.." % os.path.dirname(__file__)):
     if outdir == None:
         outdir = "%s/out" % dir
 
     if os.path.isdir(outdir) == False:
         os.makedirs(outdir)
 
-    return
 
 def get_template(dir, template):
     return Template(filename="%s/%s.html" % (dir, template))
