@@ -3,6 +3,7 @@ import sys
 import re
 import markdown
 import yaml
+from Document import Document
 from collections import defaultdict
 from mako.template import Template
 
@@ -14,9 +15,15 @@ VALID_POST_FILE = "(\d{4})(\d{2})(\d{2})-(.*)\.markdown"
 
 
 def get_posts(dir="%s/.." % os.path.dirname(__file__)):
-    posts = os.listdir("%s/%s/" % (dir, POST_DIR))
-    posts = filter(lambda x: re.match(VALID_POST_FILE, x) != None, posts)
-    posts.sort()
+    post_files = os.listdir("%s/%s/" % (dir, POST_DIR))
+    post_files = filter(lambda x: re.match(VALID_POST_FILE, x) != None, post_files)
+    post_files.sort()
+
+    posts = []
+    for file in post_files:
+        post = Document()
+        post.filename = file
+        posts.append(post)
 
     return posts
 
@@ -27,11 +34,11 @@ def get_post_meta(post_file_name):
 
 
 def parse_post(post, dir="%s/.." % os.path.dirname(__file__)):
-    data = open("%s/%s/%s" % (dir, POST_DIR, post), "r").read()
+    data = open("%s/%s/%s" % (dir, POST_DIR, post.filename), "r").read()
     matches = re.match(r"(.*)\.\.\.(.*)", data, re.MULTILINE|re.DOTALL)
-    post = matches.group(2)
+    text = matches.group(2)
     header = yaml.load(matches.group(1))
-    return (header, post)
+    return (header, text)
 
 
 def write_post(post, outdir=None, dir="%s/.." % os.path.dirname(__file__)):
