@@ -15,8 +15,8 @@ VALID_POST_FILE = "(\d{4})(\d{2})(\d{2})-(.*)\.markdown"
 
 def get_posts(dir="%s/.." % os.path.dirname(__file__)):
     posts = os.listdir("%s/%s/" % (dir, POST_DIR))
-    posts = filter(lambda x: re.match(VALID_POST_FILE, x) != None, posts)
-    posts.sort()
+    posts = filter(lambda x: re.match(VALID_POST_FILE, x) != None, posts).sort()
+
     return posts
 
 def get_post_meta(post_file_name):
