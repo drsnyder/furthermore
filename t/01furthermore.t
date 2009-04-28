@@ -14,9 +14,24 @@ class TestQueueMon(unittest.TestCase):
     def setUp(self):
         """ no setup necessary """
 
+
     def testget_posts(self):
         posts = furthermore.get_posts()
         self.assertTrue(len(posts) > 0)
+
+        post = posts.pop()
+        self.assertTrue(post.year > 0)
+        self.assertTrue(post.month > 0)
+        self.assertTrue(post.day > 0)
+        self.assertTrue(len(post.slug) > 0)
+        self.assertTrue(len(post.content) > 0)
+        self.assertTrue(len(post.html) > 0)
+        self.assertTrue(hasattr(post, 'header'))
+
+
+    def testwrite_post(self):
+        pass
+
 
 
     def testparse_post(self):
@@ -26,13 +41,7 @@ class TestQueueMon(unittest.TestCase):
         self.assertTrue(header.has_key('title'))
         self.assertTrue(re.search("Some text", content))
 
-    def testrender_post(self):
-        test = furthermore.render_post(furthermore.get_posts().pop())
-        self.assertTrue(len(test) > 0)
-        self.assertTrue(re.search("My second", test))
-        self.assertTrue(re.search("codehilite", test))
-        
-    
+
     def testget_post_meta(self):
         meta = furthermore.get_post_meta("20090420-my-first-post.markdown")
         (year, month, day, title) = meta
@@ -40,6 +49,15 @@ class TestQueueMon(unittest.TestCase):
         self.assertEqual(month, "04")
         self.assertEqual(day, "20")
         self.assertEqual(title, "my-first-post")
+
+
+    def testrender_post(self):
+        test = furthermore.render_post(furthermore.get_posts().pop())
+        self.assertTrue(len(test) > 0)
+        self.assertTrue(re.search("A post with pygments", test))
+        self.assertTrue(re.search("codehilite", test))
+        
+    
         
 
 if __name__ == '__main__':
