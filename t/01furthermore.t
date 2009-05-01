@@ -56,6 +56,24 @@ class TestQueueMon(unittest.TestCase):
         self.assertTrue(len(test) > 0)
         self.assertTrue(re.search("A post with pygments", test))
         self.assertTrue(re.search("codehilite", test))
+
+
+    def testparse_document_file(self):
+        file = "%s/../posts/20090410-my-first-post.markdown" \
+                % os.path.dirname(__file__)
+        (header, content) = furthermore.parse_document_file(file)
+        self.assertTrue(header.has_key('layout'))
+        self.assertTrue(header.has_key('title'))
+        self.assertTrue(re.search("Some text", content))
+
+    def testrender_document(self):
+        file = "%s/../posts/20090410-my-first-post.markdown" \
+                % os.path.dirname(__file__)
+        (header, content) = furthermore.parse_document_file(file)
+        text = furthermore.render_document(header, content)
+        print text
+
+
         
     
         

@@ -9,6 +9,8 @@ Some text
       puts 'foo'
     end
 
+Another break.
+
     :::python
     def somefun():
         print 'foo'

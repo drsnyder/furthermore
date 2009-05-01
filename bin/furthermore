@@ -1,46 +1,33 @@
+#!/usr/bin/env python
 # vim: ft=python
 import re
 import os
 import sys
 import textile
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_by_name, TextLexer
 from mako.template import Template
 from optparse import OptionParser
 
-sys.path.append("%s/../library" % os.path.dirname(__file__))
+sys.path.append("%s/../lib" % os.path.dirname(__file__))
 
-def replace_code(m):
-    try: 
-        lexer = get_lexer_by_name(m.group(1))
-    except ValueError:
-        lexer = TextLexer()
-
-    code = highlight(m.group(2), lexer, HtmlFormatter(noclasses=False))
-    code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
-    return '\n<notextile><div class="code">%s</div></notextile>\n' % code
-
-
+import furthermore
 
 if __name__ == '__main__':
-   usage = """usage: %prog [options]
+    usage = """usage: %prog [options]
 
     """ 
-    
+
 
     parser = OptionParser(usage)
-    #parser.add_option("-c", "--config", dest="config", help="the config file to use that defines the actions")
-    #parser.add_option("-D", "--debug", dest="debug", action="store_true", default=False, help="turn debugging on")
+    parser.add_option("-f", "--file", dest="file", help="file to process")
+    parser.add_option("-T", "--template_dir", dest="template_dir", \
+            default="%s/../templates" % os.path.dirname(__file__), \
+            help="template directory")
+    parser.add_option("-o", "--out", dest="out", help="file to write out to")
+
 
     (options, args) = parser.parse_args()
 
-    fd = open('textile-pygments.test', 'r')
-    data = fd.read()
 
-    
-    pattern = re.compile(r'{% highlight (.+?) %}(.+?){% endhighlight %}', re.S)
-    data = pattern.sub(replace_code, data)
-    mytemplate = Template(filename='post.html')
-    print mytemplate.render(content=textile.textile(data))
-
+    (header, content) = furthermore.parse_document_file(options.file)
+    text = furthermore.render_document(header, content)
+    print text

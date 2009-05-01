@@ -14,6 +14,24 @@ POST_DIR = "posts"
 VALID_POST_FILE = "(\d{4})(\d{2})(\d{2})-(.*)\.markdown"
 
 
+def parse_document_file(file):
+    data = open(file, "r").read()
+    matches = re.match(r"(.*)\.\.\.(.*)", data, re.MULTILINE|re.DOTALL)
+    text = matches.group(2)
+    header = yaml.load(matches.group(1))
+    return (header, text)
+
+
+def render_document(header, content, template_dir="%s/../templates" % os.path.dirname(__file__)):
+    # seems like we need some kind of post object
+    if not header['layout']:
+        header['layout'] = "post"
+
+    template = get_template(template_dir, header['layout'])
+    content = markdown.markdown(content, ['codehilite(force_linenos=True)'])
+    return template.render(content=content, title=header['title'])
+
+############################################
 def get_posts(dir="%s/.." % os.path.dirname(__file__)):
     post_files = os.listdir("%s/%s/" % (dir, POST_DIR))
     post_files = filter(lambda x: re.match(VALID_POST_FILE, x) != None, post_files)
