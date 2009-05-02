@@ -57,7 +57,15 @@ class TestQueueMon(unittest.TestCase):
         self.assertTrue(re.search("A post with pygments", test))
         self.assertTrue(re.search("codehilite", test))
 
+    def testwrite_post(self):
+        post = furthermore.get_posts().pop()
+        furthermore.write_post(post)
+        file = "%s/../out/archives/%s/%s/%s/%s.html" \
+                % (os.path.dirname(__file__), post.year, \
+                post.month, post.day, post.slug)
+        self.assertTrue(os.path.isfile(file))
 
+    ##########################################################
     def testparse_document_file(self):
         file = "%s/../posts/20090410-my-first-post.markdown" \
                 % os.path.dirname(__file__)
@@ -71,10 +79,6 @@ class TestQueueMon(unittest.TestCase):
                 % os.path.dirname(__file__)
         (header, content) = furthermore.parse_document_file(file)
         text = furthermore.render_document(header, content)
-        print text
-
-
-        
     
         
 

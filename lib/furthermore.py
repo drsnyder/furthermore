@@ -89,11 +89,13 @@ def render_post(post, properties=defaultdict(str), \
 
 def write_post(post, outdir=None, dir="%s/.." % os.path.dirname(__file__)):
     if outdir == None:
-        outdir = "%s/out" % dir
+        outdir = "%s/out/archives/" % dir
 
-    if os.path.isdir(outdir) == False:
-        os.makedirs(outdir)
+    fullpath = "%s/%s/%s/%s/" % (outdir, post.year, post.month, post.day)
+    if os.path.isdir(fullpath) == False:
+        os.makedirs(fullpath)
 
-
-
-
+    html = render_post(post)
+    fd = open("%s/%s.html" % (fullpath, post.slug), "w")
+    ret = fd.write(html)
+    fd.close()
