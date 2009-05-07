@@ -11,6 +11,7 @@ from mako.template import Template
 # html = markdown.markdown(text, ['codehilite(force_linenos=True)'])
 
 POST_DIR = "posts"
+ARCHIVE_DIR = "archives"
 VALID_POST_FILE = "(\d{4})(\d{2})(\d{2})-(.*)\.markdown"
 
 
@@ -87,11 +88,13 @@ def render_post(post, properties=defaultdict(str), \
     return template.render(content=content, title=title)
 
 
-def write_post(post, outdir=None, dir="%s/.." % os.path.dirname(__file__)):
-    if outdir == None:
-        outdir = "%s/out/archives/" % dir
+def get_post_path(post, dir="%s/.." % os.path.dirname(__file__)):
+    outdir = "%s/out/%s" % (dir, ARCHIVE_DIR)
+    return "%s/%s/%s/%s/" % (outdir, post.year, post.month, post.day)
+    
 
-    fullpath = "%s/%s/%s/%s/" % (outdir, post.year, post.month, post.day)
+def write_post(post, dir="%s/.." % os.path.dirname(__file__)):
+    fullpath = get_post_path(post)
     if os.path.isdir(fullpath) == False:
         os.makedirs(fullpath)
 

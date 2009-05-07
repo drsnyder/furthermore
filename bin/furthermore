@@ -19,15 +19,31 @@ if __name__ == '__main__':
 
     parser = OptionParser(usage)
     parser.add_option("-f", "--file", dest="file", help="file to process")
+    parser.add_option("-o", "--out", dest="out", help="file to write out to")
     parser.add_option("-T", "--template_dir", dest="template_dir", \
             default="%s/../templates" % os.path.dirname(__file__), \
             help="template directory")
-    parser.add_option("-o", "--out", dest="out", help="file to write out to")
 
+    parser.add_option("-P", "--process-posts", dest="process_posts", help="process posts")
+    parser.add_option("-b", "--base", dest="base", help="base directory")
 
     (options, args) = parser.parse_args()
 
 
-    (header, content) = furthermore.parse_document_file(options.file)
-    text = furthermore.render_document(header, content)
-    print text
+    if options.file != None:
+        (header, content) = furthermore.parse_document_file(options.file)
+        text = furthermore.render_document(header, content)
+        if options.out != None:
+            fd = open(options.out, "w")
+            fd.write(text)
+            fd.close()
+        else:
+            print text
+
+    if options.base == None:
+        options.base = "%s/../" % os.path.dirname(__file__)
+
+    if options.process_posts != None:
+        posts = furthermore.get_posts(options.base)
+
+
