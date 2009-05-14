@@ -1,0 +1,52 @@
+body {
+  background-color: white;
+  font: 13.34px helvetica, arial, clean, sans-serif;
+  *font-size: small;
+  text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: 153.9%;
+}
+
+h1 {
+  margin-bottom: 0.5em;
+  margin-top: 1em;
+}
+
+p {
+  margin: 1em 0;
+}
+
+a {
+  color: #00a;
+}
+
+a:hover {
+  color: black;
+}
+
+a:visited {
+  color: #a0a;
+}
+
+.header {
+    margin-bottom: 1em;
+}
+
+
+.subtext {
+    margin-right: 3em;
+    font-size: 85%;
+    color: #666;
+    text-align: right;
+}
+
+
+.footer {
+    font-size: 85%;
+    color: #666;
+    border-top: 4px solid #eee;
+    margin-top: 2em;
+    overflow: hidden;
+}

@@ -1,11 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+ "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <head>
-        <link rel="stylesheet" href="css/pygments.css" type="text/css" />
-        <title>${title}</title>
-    </head>
-    <body>
-        ${content}
-    </body>
+<head>
+   <title>${title}</title>
+   <link rel="stylesheet" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
+   <link rel="stylesheet" href="css/pygments.css" type="text/css" />
+   <link rel="stylesheet" href="css/screen.css" type="text/css" />
+</head>
+<body>
+<div id="doc" class="yui-t7">
+    <div id="hd" role="banner">
+        <div class="header">
+            <h1>Damon Snyder</h1>
+            <div class="subtext">beta</div>
+        </div>
+    </div>
+    <div id="bd" role="main">
+        <div class="yui-g">
+            ${content}
+        </div>
+
+    </div>
+    <div class="footer" id="ft" role="contentinfo">
+        <p>
+            <a href="http://www.twitter.com/damonsnyder">twitter.com/damonsnyder</a><br />
+            <a href="http://www.diigo.com/user/drsnyder">diigo.com/users/drsnyder</a><br />
+        </p>
+    </div>
+</div>
+</body>
 </html>
