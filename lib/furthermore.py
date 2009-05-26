@@ -1,3 +1,4 @@
+# vim: set expandtab textwidth=79 ts=4 sts=4 ft=python:
 import os
 import sys
 import re

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# vim: ft=python
+# vim: set expandtab textwidth=79 ts=4 sts=4 ft=python:
 import re
 import os
 import sys
@@ -10,6 +10,7 @@ from optparse import OptionParser
 sys.path.append("%s/../lib" % os.path.dirname(__file__))
 
 import furthermore
+from LocalHTTPServer import *
 
 if __name__ == '__main__':
     usage = """usage: %prog [options]
@@ -24,8 +25,15 @@ if __name__ == '__main__':
             default="%s/../templates" % os.path.dirname(__file__), \
             help="template directory")
 
-    parser.add_option("-P", "--process-posts", dest="process_posts", help="process posts")
-    parser.add_option("-b", "--base", dest="base", help="base directory")
+    parser.add_option("-P", "--process-posts", dest="process_posts", \
+            help="process posts")
+    parser.add_option("-b", "--base", dest="base", \
+            default="%s/../" % os.path.dirname(__file__), help="base directory")
+
+    parser.add_option("-S", "--server", dest="server", action="store_true", \
+            default=False, help="start local web server")
+    parser.add_option("-p", "--port", dest="port", default=8080, \
+            help="start local web server on this port")
 
     (options, args) = parser.parse_args()
 
@@ -43,7 +51,17 @@ if __name__ == '__main__':
     if options.base == None:
         options.base = "%s/../" % os.path.dirname(__file__)
 
+    if options.out == None:
+        options.out = "%s/../out" % os.path.dirname(__file__)
+
     if options.process_posts != None:
         posts = furthermore.get_posts(options.base)
+        # TODO: process these posts
 
+
+    if options.server == True:
+        os.system("rsync -avz --exclude '.svn' %s/../css %s/ > /dev/null" % \
+                (os.path.dirname(__file__), options.out))
+        server = LocalHTTPServer(options.port, options.out)
+        server.run()
 
