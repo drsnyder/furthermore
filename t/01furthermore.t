@@ -23,9 +23,11 @@ class TestQueueMon(unittest.TestCase):
         self.assertTrue(post.year > 0)
         self.assertTrue(post.month > 0)
         self.assertTrue(post.day > 0)
+        self.assertTrue(len(post.date) > 0)
         self.assertTrue(len(post.slug) > 0)
         self.assertTrue(len(post.content) > 0)
         self.assertTrue(len(post.html) > 0)
+        self.assertTrue(len(post.url) > 0)
         self.assertTrue(hasattr(post, 'header'))
 
 

@@ -7,6 +7,7 @@ import yaml
 from Document import Document
 from collections import defaultdict
 from mako.template import Template
+from mako.lookup import TemplateLookup
 
 
 # html = markdown.markdown(text, ['codehilite(force_linenos=True)'])
@@ -31,7 +32,8 @@ def render_document(header, content, template_dir="%s/../templates" % os.path.di
 
     template = get_template(template_dir, header['layout'])
     content = markdown.markdown(content, ['codehilite(force_linenos=True)'])
-    return template.render(content=content, title=header['title'])
+    return template.render(content=content, title=header['title'], \
+            template_dir=template_dir)
 
 ############################################
 def get_posts(dir="%s/.." % os.path.dirname(__file__)):
@@ -44,8 +46,11 @@ def get_posts(dir="%s/.." % os.path.dirname(__file__)):
         post = Document()
         post.filename = file
         (post.year, post.month, post.day, post.slug) = get_post_meta(file)
+        post.date = "%04d/%02d/%02d" % (int(post.year), int(post.month), \
+                int(post.day))
         (post.header, post.content) = parse_post(post)
         post.html = render_post(post)
+        post.url = get_post_url(post)
 
         posts.append(post)
 
@@ -67,12 +72,12 @@ def parse_post(post, dir="%s/.." % os.path.dirname(__file__)):
 
 
 def get_template(dir, template):
-    return Template(filename="%s/%s.html" % (dir, template))
+    template_lookup = TemplateLookup(directories=[dir])
+    return Template(filename="%s/%s.html" % (dir, template), lookup=template_lookup)
 
 
 def render_post(post, properties=defaultdict(str), \
         template_dir="%s/../templates" % os.path.dirname(__file__)):
-
 
     if not post.header.has_key('layout'):
         layout = "post"
@@ -86,12 +91,17 @@ def render_post(post, properties=defaultdict(str), \
 
     template = get_template(template_dir, layout)
     content = markdown.markdown(post.content, ['codehilite(force_linenos=True)'])
-    return template.render(content=content, title=title)
+    return template.render(content=content, title=title, \
+            template_dir=template_dir)
 
 
 def get_post_path(post, dir="%s/.." % os.path.dirname(__file__)):
     outdir = "%s/out/%s" % (dir, ARCHIVE_DIR)
     return "%s/%s/%s/%s/" % (outdir, post.year, post.month, post.day)
+
+def get_post_url(post):
+    return "/%s/%s/%s/%s/%s.html" % (ARCHIVE_DIR, post.year, post.month, \
+            post.day, post.slug)
     
 
 def write_post(post, dir="%s/.." % os.path.dirname(__file__)):
