@@ -10,8 +10,6 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 
 
-# html = markdown.markdown(text, ['codehilite(force_linenos=True)'])
-
 POST_DIR = "posts"
 ARCHIVE_DIR = "archives"
 VALID_POST_FILE = "(\d{4})(\d{2})(\d{2})-(.*)\.markdown"
@@ -23,7 +21,6 @@ def parse_document_file(file):
     text = matches.group(2)
     header = yaml.load(matches.group(1))
     return (header, text)
-
 
 def render_document(header, content, template_dir="%s/../templates" % os.path.dirname(__file__)):
     # seems like we need some kind of post object
