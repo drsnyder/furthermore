@@ -7,7 +7,7 @@ import unittest
 
 sys.path.append("%s/../lib/" % os.path.dirname(__file__))
 
-from Document import Document, VALID_POST_FILE
+from Document import Document, VALID_POST_FILE, parse, get_post_meta
 
 class TestDocument(unittest.TestCase):
 
@@ -31,10 +31,13 @@ class TestDocument(unittest.TestCase):
         self.assertTrue(len(p.date) > 0)
         self.assertTrue(len(p.slug) > 0)
         self.assertTrue(len(p.content) > 0)
-        #self.assertTrue(len(p.html) > 0)
         self.assertTrue(len(p.url) > 0)
 
-        p = Document("%s/../index.html" % os.path.dirname(__file__))
+        html = p.render()
+        self.assertTrue(len(p.html) > 0)
+
+
+        p = Document("%s/../index.markdown" % os.path.dirname(__file__))
         self.assertTrue(hasattr(p, 'header'))
         self.assertTrue(hasattr(p, 'content'))
         self.assertTrue(hasattr(p, 'year'))
@@ -48,73 +51,64 @@ class TestDocument(unittest.TestCase):
         self.assertTrue(len(p.url) > 0)
 
 
-    #def testinit(self):
-    #    posts = furthermore.get_posts()
-    #    self.assertTrue(len(posts) > 0)
-
-    #    post = posts.pop()
-    #    self.assertTrue(post.year > 0)
-    #    self.assertTrue(post.month > 0)
-    #    self.assertTrue(post.day > 0)
-    #    self.assertTrue(len(post.date) > 0)
-    #    self.assertTrue(len(post.slug) > 0)
-    #    self.assertTrue(len(post.content) > 0)
-    #    self.assertTrue(len(post.html) > 0)
-    #    self.assertTrue(len(post.url) > 0)
-    #    self.assertTrue(hasattr(post, 'header'))
 
 
-    #def testwrite_post(self):
-    #    pass
+    def testparse(self):
+        """ split post into yaml header and post rest """
+        post = self.post_files[1]
+        (header, content) = parse("%s/../posts/%s" % \
+                (os.path.dirname(__file__), post))
+        self.assertTrue(header.has_key('layout'))
+        self.assertTrue(header.has_key('title'))
+        self.assertTrue(re.search("Some text", content))
 
 
+    def testget_post_meta(self):
+        meta = get_post_meta("20090420-my-first-post.markdown")
+        (year, month, day, slug, type) = meta
+        self.assertEqual(year, "2009")
+        self.assertEqual(month, "04")
+        self.assertEqual(day, "20")
+        self.assertEqual(slug, "my-first-post")
 
-    #def testparse_post(self):
-    #    """ split post into yaml header and post rest """
-    #    (header, content) = furthermore.parse_post(furthermore.get_posts().pop())
-    #    self.assertTrue(header.has_key('layout'))
-    #    self.assertTrue(header.has_key('title'))
-    #    self.assertTrue(re.search("Some text", content))
+        meta = get_post_meta("index.html")
+        (year, month, day, slug, type) = meta
+        self.assertEqual(year, None)
+        self.assertEqual(month, None)
+        self.assertEqual(day, None)
+        self.assertEqual(slug, "index")
+
+    def testget_path(self):
+        post = self.post_files[1]
+        p = Document("%s/../posts/%s" % (os.path.dirname(__file__), post), \
+                outdir="%s/../tmp/www" % os.path.dirname(__file__))
+        path = p.get_path()
+        self.assertEqual("t/../tmp/www/archives/2009/04/11/", path)
+
+    def testwrite_post(self):
+        post = self.post_files[1]
+        p = Document("%s/../posts/%s" % (os.path.dirname(__file__), post), \
+                outdir="%s/../tmp/www/" % os.path.dirname(__file__))
+        p.write()
+        
+        file = "%s/../tmp/www/archives/%s/%s/%s/%s.html" \
+                % (os.path.dirname(__file__), p.year, \
+                p.month, p.day, p.slug)
+        self.assertTrue(os.path.isfile(file))
+
+    def testwrite_index(self):
+        posts = []
+        for post in self.post_files:
+            p = Document("%s/../posts/%s" % (os.path.dirname(__file__), post), \
+                    outdir="%s/../tmp/www" % os.path.dirname(__file__))
+            posts.append(p)
+
+        properties = { 'posts':posts }
+        i = Document("%s/../index.markdown" % os.path.dirname(__file__), \
+                properties=properties)
+        print i.render()
 
 
-    #def testget_post_meta(self):
-    #    meta = furthermore.get_post_meta("20090420-my-first-post.markdown")
-    #    (year, month, day, title) = meta
-    #    self.assertEqual(year, "2009")
-    #    self.assertEqual(month, "04")
-    #    self.assertEqual(day, "20")
-    #    self.assertEqual(title, "my-first-post")
-
-
-    #def testrender_post(self):
-    #    test = furthermore.render_post(furthermore.get_posts().pop())
-    #    self.assertTrue(len(test) > 0)
-    #    self.assertTrue(re.search("A post with pygments", test))
-    #    self.assertTrue(re.search("codehilite", test))
-
-    #def testwrite_post(self):
-    #    post = furthermore.get_posts().pop()
-    #    furthermore.write_post(post)
-    #    file = "%s/../out/archives/%s/%s/%s/%s.html" \
-    #            % (os.path.dirname(__file__), post.year, \
-    #            post.month, post.day, post.slug)
-    #    self.assertTrue(os.path.isfile(file))
-
-    ###########################################################
-    #def testparse_document_file(self):
-    #    file = "%s/../posts/20090410-my-first-post.markdown" \
-    #            % os.path.dirname(__file__)
-    #    (header, content) = furthermore.parse_document_file(file)
-    #    self.assertTrue(header.has_key('layout'))
-    #    self.assertTrue(header.has_key('title'))
-    #    self.assertTrue(re.search("Some text", content))
-
-    #def testrender_document(self):
-    #    file = "%s/../posts/20090410-my-first-post.markdown" \
-    #            % os.path.dirname(__file__)
-    #    (header, content) = furthermore.parse_document_file(file)
-    #    text = furthermore.render_document(header, content)
-    
         
 
 if __name__ == '__main__':

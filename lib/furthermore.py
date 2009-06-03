@@ -54,51 +54,51 @@ def get_posts(dir="%s/.." % os.path.dirname(__file__)):
     return posts
 
 
-def get_post_meta(post_file_name):
-    meta = re.match(VALID_POST_FILE, post_file_name)
-    #        year           month         day             slug
-    return (meta.group(1), meta.group(2), meta.group(3), meta.group(4))
+#def get_post_meta(post_file_name):
+#    meta = re.match(VALID_POST_FILE, post_file_name)
+#    #        year           month         day             slug
+#    return (meta.group(1), meta.group(2), meta.group(3), meta.group(4))
 
 
-def parse_post(post, dir="%s/.." % os.path.dirname(__file__)):
-    data = open("%s/%s/%s" % (dir, POST_DIR, post.filename), "r").read()
-    matches = re.match(r"(.*)\.\.\.(.*)", data, re.MULTILINE|re.DOTALL)
-    text = matches.group(2)
-    header = yaml.load(matches.group(1))
-    return (header, text)
+#def parse_post(post, dir="%s/.." % os.path.dirname(__file__)):
+#    data = open("%s/%s/%s" % (dir, POST_DIR, post.filename), "r").read()
+#    matches = re.match(r"(.*)\.\.\.(.*)", data, re.MULTILINE|re.DOTALL)
+#    text = matches.group(2)
+#    header = yaml.load(matches.group(1))
+#    return (header, text)
 
 
-def get_template(dir, template):
-    template_lookup = TemplateLookup(directories=[dir])
-    return Template(filename="%s/%s.html" % (dir, template), lookup=template_lookup)
+#def get_template(dir, template):
+#    template_lookup = TemplateLookup(directories=[dir])
+#    return Template(filename="%s/%s.html" % (dir, template), lookup=template_lookup)
 
 
-def render_post(post, properties=defaultdict(str), \
-        template_dir="%s/../templates" % os.path.dirname(__file__)):
+#def render_post(post, properties=defaultdict(str), \
+#        template_dir="%s/../templates" % os.path.dirname(__file__)):
+#
+#    if not post.header.has_key('layout'):
+#        layout = "post"
+#    else:
+#        layout = post.header['layout']
+#
+#    if not post.header.has_key('title'):
+#        title = ""
+#    else:
+#        title = post.header['title']
+#
+#    template = get_template(template_dir, layout)
+#    content = markdown.markdown(post.content, ['codehilite(force_linenos=True)'])
+#    return template.render(content=content, title=title, \
+#            template_dir=template_dir)
+#
 
-    if not post.header.has_key('layout'):
-        layout = "post"
-    else:
-        layout = post.header['layout']
+#def get_post_path(post, dir="%s/.." % os.path.dirname(__file__)):
+#    outdir = "%s/out/%s" % (dir, ARCHIVE_DIR)
+#    return "%s/%s/%s/%s/" % (outdir, post.year, post.month, post.day)
 
-    if not post.header.has_key('title'):
-        title = ""
-    else:
-        title = post.header['title']
-
-    template = get_template(template_dir, layout)
-    content = markdown.markdown(post.content, ['codehilite(force_linenos=True)'])
-    return template.render(content=content, title=title, \
-            template_dir=template_dir)
-
-
-def get_post_path(post, dir="%s/.." % os.path.dirname(__file__)):
-    outdir = "%s/out/%s" % (dir, ARCHIVE_DIR)
-    return "%s/%s/%s/%s/" % (outdir, post.year, post.month, post.day)
-
-def get_post_url(post):
-    return "/%s/%s/%s/%s/%s.html" % (ARCHIVE_DIR, post.year, post.month, \
-            post.day, post.slug)
+#def get_post_url(post):
+#    return "/%s/%s/%s/%s/%s.html" % (ARCHIVE_DIR, post.year, post.month, \
+#            post.day, post.slug)
     
 
 def write_post(post, dir="%s/.." % os.path.dirname(__file__)):

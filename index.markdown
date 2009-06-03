@@ -9,6 +9,6 @@ title: Damon Snyder
                 <li><span>${post.date}</span> &raquo; <a href="${post.url}">${post.title}</a></li>
             % endfor
         </ul>
-    % else
+    % else:
         <h2>Error, no posts available!</h2>
     % endif
