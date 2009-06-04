@@ -2,12 +2,12 @@
 # add another class to handle what main is doing below
 import os
 from BaseHTTPServer import HTTPServer
-from FurthermoreWebHandler import *
+from LocalRequestHandler import LocalRequestHandler
 
 class LocalHTTPServer(HTTPServer):
 
     def __init__(self, base_dir, out_dir, host='', port=8080):
-        HTTPServer.__init__(self, (host, port), FurthermoreWebHandler)
+        HTTPServer.__init__(self, (host, port), LocalRequestHandler)
         self.base_dir = base_dir
         self.docroot = out_dir
         self.port = port

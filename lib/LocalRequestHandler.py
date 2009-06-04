@@ -1,12 +1,11 @@
 import os
 from BaseHTTPServer import BaseHTTPRequestHandler
 
-class FurthermoreWebHandler(BaseHTTPRequestHandler):
+class LocalRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         try:
             if self.path.endswith("/"):
-                #f = open(os.curdir + os.sep + "index.html") 
                 f = open(self.server.docroot + os.sep + "index.html") 
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
@@ -15,7 +14,6 @@ class FurthermoreWebHandler(BaseHTTPRequestHandler):
                 f.close()
                 return
             elif self.path.endswith(".html"):
-                #f = open(os.curdir + os.sep + self.path) 
                 f = open(self.server.docroot + os.sep + self.path) 
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
@@ -37,6 +35,15 @@ class FurthermoreWebHandler(BaseHTTPRequestHandler):
                 f = open(self.server.base_dir + os.sep + self.path) 
                 self.send_response(200)
                 self.send_header('Content-type', 'text/css')
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()
+                return
+            elif self.path.endswith(".png"):   #css
+                # serve the css files from the base directory 
+                f = open(self.server.base_dir + os.sep + self.path) 
+                self.send_response(200)
+                self.send_header('Content-type', 'image/png')
                 self.end_headers()
                 self.wfile.write(f.read())
                 f.close()
