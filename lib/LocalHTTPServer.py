@@ -4,23 +4,20 @@ import os
 from BaseHTTPServer import HTTPServer
 from FurthermoreWebHandler import *
 
-class LocalHTTPServer:
+class LocalHTTPServer(HTTPServer):
 
-    def __init__(self, port=8080, dir="%s/../out/" % os.path.dirname(__file__)):
-        # I'm not crazy about how this currently works. I have to copy the css
-        # directory from the base to the dir specified here before we begin
-        # serving files
-        self.dir = dir
+    def __init__(self, base_dir, out_dir, host='', port=8080):
+        HTTPServer.__init__(self, (host, port), FurthermoreWebHandler)
+        self.base_dir = base_dir
+        self.docroot = out_dir
         self.port = port
-        self.server = HTTPServer(('', self.port), FurthermoreWebHandler)
 
     def run(self):
-        os.chdir(self.dir)
         try:
             print 'started http server on %d...' % self.port
-            self.server.serve_forever()
+            self.serve_forever()
         except KeyboardInterrupt:
             print '^C received, shutting down server'
-            self.server.socket.close()
+            self.socket.close()
 
 

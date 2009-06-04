@@ -7,7 +7,7 @@ import yaml
 from collections import defaultdict
 from mako.template import Template
 from mako.lookup import TemplateLookup
-import datetime
+from datetime import datetime, date, time
 import PyRSS2Gen as RSS2
 
 
@@ -73,7 +73,7 @@ class Document:
         
     def get_url(self):
         if self.day != None:
-            return "/%s/%s/%s/%s/%s.html" % (ARCHIVE_DIR, self.year, self.month, \
+            return "%s/%s/%s/%s/%s.html" % (ARCHIVE_DIR, self.year, self.month, \
                     self.day, self.slug)
         else:
             return "/%s" % self.file
@@ -103,6 +103,9 @@ class Document:
         else:
             raise InvalidDocumentType
 
+        # save just the post content
+        self.post_content = content
+
         template = get_template(template_dir, self.layout)
         self.html = template.render(content=content, title=self.title, \
                 template_dir=template_dir, properties=self.properties)
@@ -123,7 +126,16 @@ class Document:
         fd.close()
 
     def rss(self):
-        pass
+        if not hasattr(self, 'post_content'):
+            self.render()
+
+        return RSS2.RSSItem(
+             title = self.title, \
+             link = "%s/%s" % ('http://damonsnyder.com', self.url), \
+             description = self.post_content, \
+             guid = RSS2.Guid("%s/%s" % ('http://damonsnyder.com', \
+             self.url)), \
+             pubDate = datetime(int(self.year), int(self.month), int(self.day)))
 
 
 

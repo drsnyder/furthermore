@@ -6,7 +6,8 @@ class FurthermoreWebHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
             if self.path.endswith("/"):
-                f = open(os.curdir + os.sep + "index.html") 
+                #f = open(os.curdir + os.sep + "index.html") 
+                f = open(self.server.docroot + os.sep + "index.html") 
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
@@ -14,17 +15,26 @@ class FurthermoreWebHandler(BaseHTTPRequestHandler):
                 f.close()
                 return
             elif self.path.endswith(".html"):
-                f = open(os.curdir + os.sep + self.path) 
+                #f = open(os.curdir + os.sep + self.path) 
+                f = open(self.server.docroot + os.sep + self.path) 
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
                 self.wfile.write(f.read())
                 f.close()
                 return
+            elif self.path.endswith(".xml"):
+                #f = open(os.curdir + os.sep + self.path) 
+                f = open(self.server.docroot + os.sep + self.path) 
+                self.send_response(200)
+                self.send_header('Content-type', 'text/xml')
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()
+                return
             elif self.path.endswith(".css"):   #css
-                print "Opening css file '%s/%s'" % \
-                        (os.curdir, self.path)
-                f = open("%s/" % os.curdir + self.path) 
+                # serve the css files from the base directory 
+                f = open(self.server.base_dir + os.sep + self.path) 
                 self.send_response(200)
                 self.send_header('Content-type', 'text/css')
                 self.end_headers()

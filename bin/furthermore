@@ -50,6 +50,7 @@ if __name__ == '__main__':
         options.template_dir = "%s/templates/" % options.base
 
     posts = []
+    posts_rss = []
     for post_file in get_posts(options.base):
         post = Document("%s/posts/%s" % (options.base, post_file), \
                 template_dir=options.template_dir, \
@@ -57,14 +58,16 @@ if __name__ == '__main__':
         if options.process_posts != None:
             post.write()
         posts.append(post)
+        posts_rss.append(post.rss())
 
     # add in the rss from each post
     # http://www.dalkescientific.com/Python/PyRSS2Gen.html
     if options.process_posts != None:
-        rss =RSS2.RSS2(title = "damonsnyder.com RSS Feed", \
+        rss = RSS2.RSS2(title = "damonsnyder.com RSS Feed", \
                 link = "http://damonsnyder.com/",\
                 description = "Beta", \
-                lastBuildDate = datetime.datetime.now())
+                lastBuildDate = datetime.now(),
+                items = posts_rss)
         rss.write_xml(open("%s/rss.xml" % options.out, "w"))
 
 
@@ -83,6 +86,6 @@ if __name__ == '__main__':
         if os.path.isdir("%s/css" % options.base):
             os.system("rsync -avz --exclude '.svn' %s/css %s/ > /dev/null" % \
                     (options.base, options.out))
-        server = LocalHTTPServer(int(options.port), options.out)
+        server = LocalHTTPServer(options.base, options.out, '', int(options.port))
         server.run()
 
