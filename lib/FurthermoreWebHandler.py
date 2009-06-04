@@ -5,7 +5,15 @@ class FurthermoreWebHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         try:
-            if self.path.endswith(".html"):
+            if self.path.endswith("/"):
+                f = open(os.curdir + os.sep + "index.html") 
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()
+                return
+            elif self.path.endswith(".html"):
                 f = open(os.curdir + os.sep + self.path) 
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
@@ -13,7 +21,7 @@ class FurthermoreWebHandler(BaseHTTPRequestHandler):
                 self.wfile.write(f.read())
                 f.close()
                 return
-            if self.path.endswith(".css"):   #css
+            elif self.path.endswith(".css"):   #css
                 print "Opening css file '%s/%s'" % \
                         (os.curdir, self.path)
                 f = open("%s/" % os.curdir + self.path) 
@@ -23,8 +31,9 @@ class FurthermoreWebHandler(BaseHTTPRequestHandler):
                 self.wfile.write(f.read())
                 f.close()
                 return
-                
-            return
+            else:
+                print "ends with '%s'" % self.path
+                return
         except IOError:
             self.send_error(404,'File Not Found: %s' % self.path)
 

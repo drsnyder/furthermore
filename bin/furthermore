@@ -6,10 +6,12 @@ import sys
 import textile
 from mako.template import Template
 from optparse import OptionParser
+import datetime
+import PyRSS2Gen as RSS2
 
 sys.path.append("%s/../lib" % os.path.dirname(__file__))
 
-import furthermore
+from Document import *
 from LocalHTTPServer import *
 
 if __name__ == '__main__':
@@ -17,51 +19,70 @@ if __name__ == '__main__':
 
     """ 
 
-
     parser = OptionParser(usage)
-    parser.add_option("-f", "--file", dest="file", help="file to process")
-    parser.add_option("-o", "--out", dest="out", help="file to write out to")
+    parser.add_option("-f", "--file", dest="files", action="append", \
+            help="files to process; can specify multiple")
+    parser.add_option("-o", "--out", dest="out", help="directory to write out to")
     parser.add_option("-T", "--template_dir", dest="template_dir", \
-            default="%s/../templates" % os.path.dirname(__file__), \
             help="template directory")
 
-    parser.add_option("-P", "--process-posts", dest="process_posts", \
+    parser.add_option("-P", "--process-posts", default=False, \
+            action="store_true", dest="process_posts", \
             help="process posts")
     parser.add_option("-b", "--base", dest="base", \
-            default="%s/../" % os.path.dirname(__file__), help="base directory")
+            help="base directory where templates, posts, etc can be found")
 
     parser.add_option("-S", "--server", dest="server", action="store_true", \
             default=False, help="start local web server")
-    parser.add_option("-p", "--port", dest="port", default=8080, \
+    parser.add_option("-p", "--port", type="int", dest="port", default=8080, \
             help="start local web server on this port")
 
     (options, args) = parser.parse_args()
 
 
-    if options.file != None:
-        (header, content) = furthermore.parse_document_file(options.file)
-        text = furthermore.render_document(header, content)
-        if options.out != None:
-            fd = open(options.out, "w")
-            fd.write(text)
-            fd.close()
-        else:
-            print text
-
     if options.base == None:
         options.base = "%s/../" % os.path.dirname(__file__)
 
     if options.out == None:
-        options.out = "%s/../out" % os.path.dirname(__file__)
+        options.out = "%s/../www" % os.path.dirname(__file__)
 
+    if options.template_dir == None:
+        options.template_dir = "%s/templates/" % options.base
+
+    posts = []
+    for post_file in get_posts(options.base):
+        post = Document("%s/posts/%s" % (options.base, post_file), \
+                template_dir=options.template_dir, \
+                out_dir=options.out)
+        if options.process_posts != None:
+            post.write()
+        posts.append(post)
+
+    # add in the rss from each post
+    # http://www.dalkescientific.com/Python/PyRSS2Gen.html
     if options.process_posts != None:
-        posts = furthermore.get_posts(options.base)
-        # TODO: process these posts
+        rss =RSS2.RSS2(title = "damonsnyder.com RSS Feed", \
+                link = "http://damonsnyder.com/",\
+                description = "Beta", \
+                lastBuildDate = datetime.datetime.now())
+        rss.write_xml(open("%s/rss.xml" % options.out, "w"))
+
+
+    if options.files != None:
+        for post_file in options.files:
+            post = Document("%s/%s" % (options.base, post_file), \
+                    template_dir=options.template_dir, \
+                    out_dir=options.out, properties={'posts':posts})
+            post.write()
 
 
     if options.server == True:
-        os.system("rsync -avz --exclude '.svn' %s/../css %s/ > /dev/null" % \
-                (os.path.dirname(__file__), options.out))
-        server = LocalHTTPServer(options.port, options.out)
+        if options.port == None:
+            options.port = 8888
+
+        if os.path.isdir("%s/css" % options.base):
+            os.system("rsync -avz --exclude '.svn' %s/css %s/ > /dev/null" % \
+                    (options.base, options.out))
+        server = LocalHTTPServer(int(options.port), options.out)
         server.run()
 

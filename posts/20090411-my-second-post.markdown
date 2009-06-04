@@ -9,6 +9,8 @@ Some text
       puts 'foo'
     end
 
+More text. The second time.
+
     :::python
     def otherfun():
         print 'foo'

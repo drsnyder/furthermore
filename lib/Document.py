@@ -7,10 +7,20 @@ import yaml
 from collections import defaultdict
 from mako.template import Template
 from mako.lookup import TemplateLookup
+import datetime
+import PyRSS2Gen as RSS2
+
 
 POST_DIR = "posts"
 ARCHIVE_DIR = "archives"
 VALID_POST_FILE = "(\d{4})(\d{2})(\d{2})-(.*)\.(\w+)$"
+
+
+def get_posts(dir):
+    post_files = os.listdir("%s/posts/" % dir)
+    post_files = filter(lambda x: re.match(VALID_POST_FILE, x) != None, post_files)
+    return post_files
+
 
 def parse(file):
     data = open(file, "r").read()
@@ -39,7 +49,7 @@ class Document:
 
     def __init__(self, file, properties=defaultdict(str), \
             template_dir="%s/../templates" % os.path.dirname(__file__), \
-            outdir="%s/../www" % os.path.dirname(__file__)):
+            out_dir="%s/../www" % os.path.dirname(__file__)):
         self.file = file
         self.template_dir = template_dir
         (self.header, self.content) = parse(file)
@@ -52,7 +62,7 @@ class Document:
 
         self.url = self.get_url()
         self.properties = properties
-        self.outdir = outdir
+        self.out_dir = out_dir
 
 
         self.layout = not self.header.has_key('layout') and "post" \
@@ -70,41 +80,40 @@ class Document:
 
     def get_path(self, dir=None):
         if dir == None:
-            dir = self.outdir
+            dir = self.out_dir
 
         if self.day != None:
-            outdir = "%s/%s" % (dir, ARCHIVE_DIR)
-            return "%s/%s/%s/%s/" % (outdir, self.year, self.month, self.day)
+            out_dir = "%s/%s" % (dir, ARCHIVE_DIR)
+            return "%s/%s/%s/%s/" % (out_dir, self.year, self.month, self.day)
         else:
-            outdir = "%s/" % dir
+            return "%s/" % dir
+
             
 
     def render(self, template_dir=None):
         if template_dir == None:
             template_dir = self.template_dir
 
-        pre_pass_template = Template(self.content)
-        pre_pass_content = pre_pass_template.render(properties=self.properties)
 
         if self.type == "markdown":
-            template = get_template(template_dir, self.layout)
             content = markdown.markdown(self.content, ['codehilite(force_linenos=True)'])
         elif self.type == "html":
-            content = self.content
+            pre_pass_template = Template(self.content)
+            content = pre_pass_template.render(properties=self.properties)
         else:
             raise InvalidDocumentType
 
+        template = get_template(template_dir, self.layout)
         self.html = template.render(content=content, title=self.title, \
                 template_dir=template_dir, properties=self.properties)
         return self.html
 
 
-    def write(self, outdir=None):
-        if outdir == None:
-            outdir = self.outdir
+    def write(self, out_dir=None):
+        if out_dir == None:
+            out_dir = self.out_dir
 
-        fullpath = self.get_path(outdir)
-
+        fullpath = self.get_path(out_dir)
         if os.path.isdir(fullpath) == False:
             os.makedirs(fullpath)
 
@@ -112,6 +121,10 @@ class Document:
         fd = open("%s/%s.html" % (fullpath, self.slug), "w")
         ret = fd.write(html)
         fd.close()
+
+    def rss(self):
+        pass
+
 
 
 

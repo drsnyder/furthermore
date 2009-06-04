@@ -5,16 +5,18 @@ import sys
 import yaml
 import unittest
 
+#import coverage
+#coverage.erase()
+#coverage.start()
+
 sys.path.append("%s/../lib/" % os.path.dirname(__file__))
 
-from Document import Document, VALID_POST_FILE, parse, get_post_meta
+from Document import Document, VALID_POST_FILE, parse, get_post_meta, get_posts
 
 class TestDocument(unittest.TestCase):
 
     def setUp(self):
-        self.post_files = os.listdir("%s/../%s/" % (os.path.dirname(__file__), "posts"))
-        self.post_files = filter(lambda x: re.match(VALID_POST_FILE, x) != None, \
-                self.post_files)
+        self.post_files = get_posts("%s/../" % os.path.dirname(__file__))
         self.post_files.sort()
 
     def test_init(self):
@@ -37,7 +39,7 @@ class TestDocument(unittest.TestCase):
         self.assertTrue(len(p.html) > 0)
 
 
-        p = Document("%s/../index.markdown" % os.path.dirname(__file__))
+        p = Document("%s/../index.html" % os.path.dirname(__file__))
         self.assertTrue(hasattr(p, 'header'))
         self.assertTrue(hasattr(p, 'content'))
         self.assertTrue(hasattr(p, 'year'))
@@ -81,14 +83,14 @@ class TestDocument(unittest.TestCase):
     def testget_path(self):
         post = self.post_files[1]
         p = Document("%s/../posts/%s" % (os.path.dirname(__file__), post), \
-                outdir="%s/../tmp/www" % os.path.dirname(__file__))
+                out_dir="%s/../tmp/www" % os.path.dirname(__file__))
         path = p.get_path()
         self.assertEqual("t/../tmp/www/archives/2009/04/11/", path)
 
     def testwrite_post(self):
         post = self.post_files[1]
         p = Document("%s/../posts/%s" % (os.path.dirname(__file__), post), \
-                outdir="%s/../tmp/www/" % os.path.dirname(__file__))
+                out_dir="%s/../tmp/www/" % os.path.dirname(__file__))
         p.write()
         
         file = "%s/../tmp/www/archives/%s/%s/%s/%s.html" \
@@ -100,16 +102,22 @@ class TestDocument(unittest.TestCase):
         posts = []
         for post in self.post_files:
             p = Document("%s/../posts/%s" % (os.path.dirname(__file__), post), \
-                    outdir="%s/../tmp/www" % os.path.dirname(__file__))
+                    out_dir="%s/../tmp/www" % os.path.dirname(__file__))
             posts.append(p)
 
         properties = { 'posts':posts }
-        i = Document("%s/../index.markdown" % os.path.dirname(__file__), \
+        i = Document("%s/../index.html" % os.path.dirname(__file__), \
                 properties=properties)
-        print i.render()
+        html = i.render()
+        self.assertTrue(len(html) > 0)
+        self.assertTrue(re.search("A post with pygments", html))
+        self.assertTrue(re.search("My second post", html))
+        self.assertTrue(re.search("twitter.com/damonsnyder", html))
 
 
         
 
 if __name__ == '__main__':
     unittest.main()
+    #coverage.stop()
+    #coverage.analysis(Document)

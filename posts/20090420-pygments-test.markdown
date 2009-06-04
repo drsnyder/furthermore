@@ -1,6 +1,6 @@
 ---
 layout: post
-title: A post with pygments
+title: A post with pygments from 4/20
 ...
 Some text
 
@@ -8,6 +8,8 @@ Some text
     def foo
       puts 'foo'
     end
+
+This is the latter post.
 
     :::python
     def somefun():
