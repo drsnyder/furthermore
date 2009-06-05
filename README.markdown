@@ -4,6 +4,7 @@ Futhermore is a simple static site generator inspired by
 It currently supports posts written in
 [markdown](http://daringfireball.net/projects/markdown/) and uses
 [mako](http://www.makotemplates.org/) templates to generate the site. 
+Pygments (via markdown) is used to add syntax highlighting to code segments.
 
 This project got started because of the advice from the [Pragmatic
 Programmer](http://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X/)
@@ -18,13 +19,22 @@ Haskell. So in the end, I ended up learning more Python than Haskell. But now
 that I have something usable, maybe I can go back the the language I started
 the year wanting to learn!
 
+# Features
+
+Furthermore is pretty simple right now. It is a bare bones static site generator with the following:
+
+ * mako templates for python-based template generation
+ * pygments syntax highlighting 
+ * markdown for text-to-html generation
+ * a local http server for site previewing 
+
 
 # Getting Started
  * Dependencies
    * [Pygments](http://pygments.org/download/) for syntax highlighting
    * [PyRSS2Gen](http://www.dalkescientific.com/Python/PyRSS2Gen.html) 
    * [PyYAML](http://pyyaml.org/wiki/PyYAML)
- * Usage Coming Soon...
+ * [Usage](http://github.com/drsnyder/Furthermore/wikis/usage/) 
 
 Enjoy!
 
