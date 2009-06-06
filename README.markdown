@@ -1,5 +1,5 @@
-# Futhermore
-Futhermore is a simple static site generator inspired by
+# Furthermore
+Furthermore is a simple static site generator inspired by
 [jekyll](http://github.com/mojombo/jekyll/tree/master) but written in python.
 It currently supports posts written in
 [markdown](http://daringfireball.net/projects/markdown/) and uses
