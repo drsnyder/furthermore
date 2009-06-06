@@ -4,19 +4,19 @@ Furthermore is a simple static site generator inspired by
 It currently supports posts written in
 [markdown](http://daringfireball.net/projects/markdown/) and uses
 [mako](http://www.makotemplates.org/) templates to generate the site. 
-Pygments (via markdown) is used to add syntax highlighting to code segments.
+Pygments (via markdown) is used to add syntax highlighting to code segments. 
+It also comes with a webserver so you can preview your site locally.
 
 This project got started because of the advice from the [Pragmatic
 Programmer](http://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X/)
 to learn one new language a year. I started out this year wanting to learn
 Haskell and realized that I wanted to blog about learning Haskell but wasn't
 satisfied with my current blogging [platform](http://wordpress.org/). Which
-remided me that I always wanted to write my own site generator. I'm supposed to
+remided me that I always wanted to write my own blog software. I'm supposed to
 be a hacker! Why not write my own? So I changed gears and started writing
-furthermore using Python-- a language I also wanted to learn. In my judgement
-the on-ramp to writing your own blogging tool is easier in Python than
-Haskell. So in the end, I ended up learning more Python than Haskell. But now
-that I have something usable, maybe I can go back the the language I started
+furthermore using Python-- a language I also wanted to learn. 
+So in the end, I ended up learning more Python than Haskell. But now
+that I have something usable, maybe I can go back to the language I started
 the year wanting to learn!
 
 # Features
