@@ -13,7 +13,7 @@ Haskell and realized that I wanted to blog about learning Haskell but wasn't
 satisfied with my current blogging [platform](http://wordpress.org/). Which
 remided me that I always wanted to write my own site generator. I'm supposed to
 be a hacker! Why not write my own? So I changed gears and started writing
-futhermore using Python-- a language I also wanted to learn. In my judgement
+furthermore using Python-- a language I also wanted to learn. In my judgement
 the on-ramp to writing your own blogging tool is easier in Python than
 Haskell. So in the end, I ended up learning more Python than Haskell. But now
 that I have something usable, maybe I can go back the the language I started
@@ -34,7 +34,7 @@ Furthermore is pretty simple right now. It is a bare bones static site generator
    * [Pygments](http://pygments.org/download/) for syntax highlighting
    * [PyRSS2Gen](http://www.dalkescientific.com/Python/PyRSS2Gen.html) 
    * [PyYAML](http://pyyaml.org/wiki/PyYAML)
- * [Usage](http://github.com/drsnyder/Furthermore/wikis/usage/) 
+ * [Usage](http://github.com/drsnyder/furthermore/wikis/usage/) 
 
 Enjoy!
 
