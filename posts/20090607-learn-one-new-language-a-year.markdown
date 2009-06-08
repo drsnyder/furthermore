@@ -18,8 +18,9 @@ I had recently found [jekyll](http://github.com/mojombo/jekyll/tree/master)
 (a static site generator written in Ruby) from a reference on
 [HN](http://news.ycombinator.com) and thought it was a great idea.
 This is exactly the kind of thing I was looking for. But using
-jekyll didn't feel quite right since I had often told myself that
-I wanted to write my own blogging tool. So I dropped learning Haskell
+jekyll didn't feel quite (well, sortof-- the layout and some of the styling
+does come from jekyll) right since I had often told myself that I
+wanted to write my own blogging tool. So I dropped learning Haskell
 (for the moment) and set out to write my own blogging tool.
 
 My background is mostly in Perl, PHP, and little bit of Ruby. But over the last 
