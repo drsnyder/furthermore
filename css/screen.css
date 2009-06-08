@@ -36,33 +36,6 @@ a:visited {
   color: #a0a;
 }
 
-.header {
-    margin-bottom: 1em;
-}
-
-
-.subtext {
-    margin-right: 3em;
-    font-size: 85%;
-    color: #666;
-    text-align: right;
-}
-
-.feed {
-    margin-right: 3em;
-    text-align: right;
-}
-
-
-
-.footer {
-    font-size: 85%;
-    color: #666;
-    border-top: 4px solid #eee;
-    margin-top: 2em;
-    margin-bottom: 2em;
-    overflow: hidden;
-}
 
 ul.posts {
     list-style-type: none;
@@ -106,5 +79,40 @@ li {
 
 .postmeta {
     color: #aaa;
+}
+
+.header {
+    margin-bottom: 1em;
+}
+
+
+.subtext {
+    margin-right: 3em;
+    font-size: 85%;
+    color: #666;
+    text-align: right;
+}
+
+.feed {
+    margin-right: 3em;
+    text-align: right;
+}
+
+
+
+.footer {
+    font-size: 85%;
+    color: #666;
+    border-top: 4px solid #eee;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    overflow: hidden;
+}
+
+.renderedby {
+    text-decoration: none;
+    text-align: center;
+    font-size: 70%;
+    color: #666;
 }
 

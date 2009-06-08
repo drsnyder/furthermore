@@ -24,7 +24,7 @@ def get_posts(dir):
 
 def parse(file):
     data = open(file, "r").read()
-    matches = re.match(r"(.*)\.\.\.(.*)", data, re.MULTILINE|re.DOTALL)
+    matches = re.match(r"(.*?)\.{3}?(.*)", data, re.MULTILINE|re.DOTALL)
     text = matches.group(2)
     header = yaml.load(matches.group(1))
     return (header, text)

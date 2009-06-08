@@ -1,3 +1,4 @@
+/*  pygmentize -f html -S default | awk '{ print ".codehilite " $0}' > css/pygments.css */
 .codehilite .hll { background-color: #ffffcc }
 .codehilite .c { color: #408080; font-style: italic } /* Comment */
 .codehilite .err { border: 1px solid #FF0000 } /* Error */

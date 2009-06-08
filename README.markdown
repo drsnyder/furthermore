@@ -31,7 +31,7 @@ Furthermore is pretty simple right now. It is a bare bones static site generator
 
 # Getting Started
  * Dependencies
-   * [Pygments](http://pygments.org/download/) for syntax highlighting
+   * [Pygments](http://pygments.org/download/) for syntax highlighting. Also see the [codehighlight](http://www.freewisdom.org/projects/python-markdown/CodeHilite) markdown plugin.
    * [PyRSS2Gen](http://www.dalkescientific.com/Python/PyRSS2Gen.html) 
    * [PyYAML](http://pyyaml.org/wiki/PyYAML)
  * [Usage](http://github.com/drsnyder/furthermore/wikis/usage/) 
