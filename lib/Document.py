@@ -17,19 +17,41 @@ VALID_POST_FILE = "(\d{4})(\d{2})(\d{2})-(.*)\.(\w+)$"
 
 
 def get_posts(dir):
+    """
+    Gets the posts matching the valid syntax from the posts dir.
+
+    @param str the base path where the posts directory resides
+    @return list of post files
+
+    """
     post_files = os.listdir("%s/posts/" % dir)
     post_files = filter(lambda x: re.match(VALID_POST_FILE, x) != None, post_files)
     return post_files
 
 
 def parse(file):
+    """
+    Parses out the preamble and the content from the document.
+
+    @param str the file to parse
+    @return tuple (header as a dict, text as str)
+
+    """
     data = open(file, "r").read()
     matches = re.match(r"(.*?)\.{3}?(.*)", data, re.MULTILINE|re.DOTALL)
     text = matches.group(2)
     header = yaml.load(matches.group(1))
     return (header, text)
 
+
 def get_post_meta(post_file_name):
+    """
+    Get the year, month, day, slug, and type from the post file name.
+
+    @param str the file name
+    @return tuple (year, month, day, slug, type) all as str
+
+    """
     meta = re.match(VALID_POST_FILE, os.path.basename(post_file_name))
     if meta != None:
         #        year           month         day             slug
@@ -40,16 +62,38 @@ def get_post_meta(post_file_name):
         # a file like index.html; just pull off the index
         return (None, None, None, meta.group(1), meta.group(2))
 
+
 def get_template(dir, template):
+    """
+    Get the mako template object.
+    
+    @param str template directory
+    @param str template name
+    @return Template
+
+    """
     template_lookup = TemplateLookup(directories=[dir])
     return Template(filename="%s/%s.html" % (dir, template), lookup=template_lookup)
 
 
 class Document:
+    """
+    Class encapsulating operations on Documents e.g. posts.
+
+    """
 
     def __init__(self, file, properties=defaultdict(str), \
             template_dir="%s/../templates" % os.path.dirname(__file__), \
             out_dir="%s/../www" % os.path.dirname(__file__)):
+        """
+        Constructor.
+
+        @param str the document to process
+        @param dict additional properties to add to the mako templates
+        @param str the template dir
+        @param str the output dir
+
+        """
         self.file = file
         self.template_dir = template_dir
         (self.header, self.content) = parse(file)
@@ -72,13 +116,28 @@ class Document:
 
         
     def get_url(self):
+        """
+        Get the url for this document.
+    
+        @return str the url
+
+        """
         if self.day != None:
             return "%s/%s/%s/%s/%s.html" % (ARCHIVE_DIR, self.year, self.month, \
                     self.day, self.slug)
         else:
             return "/%s" % self.file
 
+
     def get_path(self, dir=None):
+        """
+        Get the ouput path for this document.
+
+        @param str an alternate directory to use; default is the one 
+            passed to the constructor
+        @return str the output path for this document
+
+        """
         if dir == None:
             dir = self.out_dir
 
@@ -91,6 +150,13 @@ class Document:
             
 
     def render(self, template_dir=None):
+        """
+        Render the document to html.
+
+        @param str template directory; defaults to the one specified in the constructor
+        @return str the html
+
+        """
         if template_dir == None:
             template_dir = self.template_dir
 
@@ -112,7 +178,14 @@ class Document:
         return self.html
 
 
+
     def write(self, out_dir=None):
+        """
+        Write out the document.
+        
+        @param str output dir; defaults to the one specified in the constructor
+        
+        """
         if out_dir == None:
             out_dir = self.out_dir
 
@@ -125,7 +198,14 @@ class Document:
         ret = fd.write(html)
         fd.close()
 
+
     def rss(self):
+        """
+        Generate the RSS item for this document.
+
+        @return PyRSS2Gen.RSSItem
+
+        """
         if not hasattr(self, 'post_content'):
             self.render()
 

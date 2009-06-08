@@ -20,7 +20,7 @@ class TestDocument(unittest.TestCase):
         self.post_files.sort()
 
     def test_init(self):
-        post = self.post_files[1]
+        post = self.post_files[0]
         p = Document("%s/../posts/%s" % (os.path.dirname(__file__), post))
         self.assertTrue(hasattr(p, 'header'))
         self.assertTrue(hasattr(p, 'content'))
@@ -57,12 +57,12 @@ class TestDocument(unittest.TestCase):
 
     def testparse(self):
         """ split post into yaml header and post rest """
-        post = self.post_files[1]
+        post = self.post_files[0]
         (header, content) = parse("%s/../posts/%s" % \
                 (os.path.dirname(__file__), post))
         self.assertTrue(header.has_key('layout'))
         self.assertTrue(header.has_key('title'))
-        self.assertTrue(re.search("Some text", content))
+        self.assertTrue(re.search("Taking the advice from", content))
 
 
     def testget_post_meta(self):
@@ -81,14 +81,14 @@ class TestDocument(unittest.TestCase):
         self.assertEqual(slug, "index")
 
     def testget_path(self):
-        post = self.post_files[1]
+        post = self.post_files[0]
         p = Document("%s/../posts/%s" % (os.path.dirname(__file__), post), \
                 out_dir="%s/../tmp/www" % os.path.dirname(__file__))
         path = p.get_path()
-        self.assertEqual("t/../tmp/www/archives/2009/04/11/", path)
+        self.assertEqual("t/../tmp/www/archives/2009/06/07/", path)
 
     def testwrite_post(self):
-        post = self.post_files[1]
+        post = self.post_files[0]
         p = Document("%s/../posts/%s" % (os.path.dirname(__file__), post), \
                 out_dir="%s/../tmp/www/" % os.path.dirname(__file__))
         p.write()
@@ -110,8 +110,7 @@ class TestDocument(unittest.TestCase):
                 properties=properties)
         html = i.render()
         self.assertTrue(len(html) > 0)
-        self.assertTrue(re.search("A post with pygments", html))
-        self.assertTrue(re.search("My second post", html))
+        self.assertTrue(re.search("<title>Damon Snyder</title>", html))
         self.assertTrue(re.search("twitter.com/damonsnyder", html))
 
 
