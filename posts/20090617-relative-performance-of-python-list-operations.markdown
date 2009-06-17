@@ -124,7 +124,9 @@ Why are they faster? My initial thought is that there is less interpreter
 overhead with the list comprehension. In the for loop, you need one other
 variable (the result array) and you need to lookup this variable during each
 iteration of the loop. You may not have that overhead with the list comprehension
-(or perhaps it is reduced).
+(or perhaps it is reduced).  You can find the code to these samples
+[here](http://damonsnyder.com/code/looptests.txt).
+
 
 David's training classes are good. You can find out more
 [here](http://www.dabeaz.com/training.html). 
