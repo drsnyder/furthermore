@@ -73,7 +73,7 @@ template to generate the title of the page. At the top level you
 will also find a "images" and "css" directories containing the
 expected collateral.
 
-And finally, to render your posts and any other files, run futhermore:
+And finally, to render your posts and any other files, run furthermore:
 
     :::bash
     ./bin/furthermore -P -b . -o www -f index.html -S
@@ -86,7 +86,7 @@ To see all of the options provided, run furthermore with -h.
 
 If you get stuck take a look at the
 [usage](http://github.com/drsnyder/furthermore/wikis/usage/) document I'm
-putting together. I'm still updating, but it should have enought to get the
+putting together. I'm still updating, but it should have enough to get the
 idea and get started if you want to use it. 
 
 Enjoy!
