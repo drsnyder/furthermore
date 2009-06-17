@@ -76,7 +76,7 @@ def get_template(dir, template):
     return Template(filename="%s/%s.html" % (dir, template), lookup=template_lookup)
 
 
-class Document:
+class Document(object):
     """
     Class encapsulating operations on Documents e.g. posts.
 
