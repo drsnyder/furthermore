@@ -37,6 +37,7 @@ generator with the following:
      markdown plugin.
    * [PyRSS2Gen](http://www.dalkescientific.com/Python/PyRSS2Gen.html) 
    * [PyYAML](http://pyyaml.org/wiki/PyYAML)
+   * [mako](http://www.makotemplates.org/)
  * [Usage](http://github.com/drsnyder/furthermore/wikis/usage/) 
 
 Enjoy!
