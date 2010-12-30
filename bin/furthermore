@@ -7,11 +7,23 @@ from mako.template import Template
 from optparse import OptionParser
 import datetime
 import PyRSS2Gen as RSS2
+import yaml
 
 sys.path.append("%s/../lib" % os.path.dirname(__file__))
 
 from Document import *
 from LocalHTTPServer import *
+
+DEFAULT_CONFIG = "%s/../config.yml" % os.path.dirname(__file__)
+
+def config_setting(config, setting, default=None):
+    if config and config.has_key(setting): 
+        return config[setting]
+
+    return default
+
+
+
 
 if __name__ == '__main__':
     usage = """usage: %prog [options]
@@ -36,17 +48,26 @@ if __name__ == '__main__':
     parser.add_option("-p", "--port", type="int", dest="port", default=8080, \
             help="start local web server on this port")
 
+    parser.add_option("-c", "--config", dest="config_file", help="config file")
+
     (options, args) = parser.parse_args()
+
+    config = None
+    if options.config_file and os.path.isfile(options.config_file):
+        config = yaml.load(open(options.config_file).read())
+    elif os.path.isfile(DEFAULT_CONFIG):
+        config = yaml.load(open(DEFAULT_CONFIG).read())
+
 
 
     if options.base == None:
-        options.base = "%s/../" % os.path.dirname(__file__)
+        options.base = config_setting(config, "base", "%s/../" % os.path.dirname(__file__))
 
     if options.out == None:
-        options.out = "%s/../www" % os.path.dirname(__file__)
+        options.out = config_setting(config, "out", "%s/../www" % os.path.dirname(__file__))
 
     if options.template_dir == None:
-        options.template_dir = "%s/templates/" % options.base
+        options.template_dir = config_setting(config, "template_dir", "%s/templates/" % options.base)
 
     posts = []
     posts_rss = []
@@ -62,10 +83,11 @@ if __name__ == '__main__':
     # add in the rss from each post
     # http://www.dalkescientific.com/Python/PyRSS2Gen.html
     if options.process_posts != None:
-        rss = RSS2.RSS2(title = "damonsnyder.com RSS Feed", \
-                link = "http://damonsnyder.com/",\
+        domain = config_setting(config, "domain", "example.com")
+        rss = RSS2.RSS2(title = "%s RSS Feed" % domain, \
+                link = "http://%s/" % domain, \
                 description = "Beta", \
-                lastBuildDate = datetime.now(),
+                lastBuildDate = datetime.now(), \
                 items = posts_rss)
         rss.write_xml(open("%s/rss.xml" % options.out, "w"))
 
